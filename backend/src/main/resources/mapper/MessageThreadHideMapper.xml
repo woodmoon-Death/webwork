@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.social.mapper.MessageThreadHideMapper">
+  <select id="findByUserAndPartner" resultType="com.example.social.entity.MessageThreadHide">
+    SELECT id, user_id, partner_id, hidden_after_message_id
+    FROM message_thread_hides
+    WHERE user_id = #{userId}
+      AND partner_id = #{partnerId}
+  </select>
+
+  <insert id="upsertHide">
+    INSERT INTO message_thread_hides (user_id, partner_id, hidden_after_message_id, hidden_at)
+    VALUES (#{userId}, #{partnerId}, #{hiddenAfterMessageId}, NOW())
+    ON DUPLICATE KEY UPDATE
+      hidden_after_message_id = VALUES(hidden_after_message_id),
+      hidden_at = VALUES(hidden_at)
+  </insert>
+
+  <delete id="deleteByUserAndPartner">
+    DELETE FROM message_thread_hides
+    WHERE user_id = #{userId}
+      AND partner_id = #{partnerId}
+  </delete>
+</mapper>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.social.mapper.FileMapper">
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO files (user_id, original_name, storage_path, url, content_type, size, created_at)
+    VALUES (#{userId}, #{originalName}, #{storagePath}, #{url}, #{contentType}, #{size}, #{createdAt})
+  </insert>
+</mapper>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.social.mapper.PostMapper">
+  <resultMap id="PostMap" type="com.example.social.entity.Post">
+    <id property="id" column="id"/>
+    <result property="userId" column="user_id"/>
+    <result property="title" column="title"/>
+    <result property="content" column="content"/>
+    <result property="imageUrl" column="image_url"/>
+    <result property="tags" column="tags"/>
+    <result property="ipLocation" column="ip_location"/>
+    <result property="ipAddress" column="ip_address"/>
+    <result property="visibility" column="visibility"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="updatedAt" column="updated_at"/>
+  </resultMap>
+
+  <resultMap id="PostVoMap" type="com.example.social.vo.PostVo">
+    <id property="id" column="id"/>
+    <result property="userId" column="user_id"/>
+    <result property="authorName" column="author_name"/>
+    <result property="avatarUrl" column="avatar_url"/>
+    <result property="title" column="title"/>
+    <result property="content" column="content"/>
+    <result property="imageUrl" column="image_url"/>
+    <result property="tags" column="tags"/>
+    <result property="ipLocation" column="ip_location"/>
+    <result property="visibility" column="visibility"/>
+    <result property="likeCount" column="like_count"/>
+    <result property="commentCount" column="comment_count"/>
+    <result property="likedByMe" column="liked_by_me"/>
+    <result property="createdAt" column="created_at"/>
+  </resultMap>
+
+  <sql id="PostVoColumns">
+    p.id, p.user_id, u.nickname AS author_name, u.avatar_url, p.title, p.content, p.image_url, p.tags, p.ip_location, p.visibility, p.created_at,
+    (SELECT COUNT(*) FROM likes l WHERE l.post_id = p.id) AS like_count,
+    (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) AS comment_count,
+    CASE
+      WHEN #{viewerId} IS NULL THEN FALSE
+      WHEN EXISTS (SELECT 1 FROM likes ml WHERE ml.post_id = p.id AND ml.user_id = #{viewerId}) THEN TRUE
+      ELSE FALSE
+    END AS liked_by_me
+  </sql>
+
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO posts (user_id, title, content, image_url, tags, ip_location, ip_address, visibility, created_at, updated_at)
+    VALUES (#{userId}, #{title}, #{content}, #{imageUrl}, #{tags}, #{ipLocation}, #{ipAddress}, #{visibility}, #{createdAt}, #{updatedAt})
+  </insert>
+
+  <update id="update">
+    UPDATE posts
+    SET title = #{title}, content = #{content}, image_url = #{imageUrl}, tags = #{tags}, updated_at = #{updatedAt}
+    WHERE id = #{id}
+  </update>
+
+  <delete id="deleteById">
+    DELETE FROM posts WHERE id = #{id}
+  </delete>
+
+  <select id="findEntityById" resultMap="PostMap">
+    SELECT * FROM posts WHERE id = #{id}
+  </select>
+
+  <select id="findVoById" resultMap="PostVoMap">
+    SELECT <include refid="PostVoColumns"/>
+    FROM posts p
+    JOIN users u ON u.id = p.user_id
+    WHERE p.id = #{id}
+    <if test="includeHidden == false">
+      AND p.visibility = 'PUBLIC'
+    </if>
+  </select>
+
+  <select id="findFeed" resultMap="PostVoMap">
+    SELECT <include refid="PostVoColumns"/>
+    FROM posts p
+    JOIN users u ON u.id = p.user_id
+    WHERE 1 = 1
+    <if test="includeHidden == false">
+      AND p.visibility = 'PUBLIC'
+    </if>
+    <if test="keyword != null and keyword != ''">
+      AND (p.title LIKE CONCAT('%', #{keyword}, '%') OR p.content LIKE CONCAT('%', #{keyword}, '%') OR u.nickname LIKE CONCAT('%', #{keyword}, '%'))
+    </if>
+    <if test="filter == 'image'">
+      AND p.image_url IS NOT NULL AND p.image_url != ''
+    </if>
+    <if test="filter == 'mine' and viewerId != null">
+      AND p.user_id = #{viewerId}
+    </if>
+    <if test="filter != null and filter.startsWith('tag:')">
+      AND FIND_IN_SET(SUBSTRING(#{filter}, 5), p.tags)
+    </if>
+    ORDER BY
+    <choose>
+      <when test="filter == 'hot'">like_count DESC, comment_count DESC, p.created_at DESC</when>
+      <otherwise>p.created_at DESC</otherwise>
+    </choose>
+  </select>
+
+  <select id="findByUserId" resultMap="PostVoMap">
+    SELECT <include refid="PostVoColumns"/>
+    FROM posts p
+    JOIN users u ON u.id = p.user_id
+    WHERE p.user_id = #{userId} AND p.visibility = 'PUBLIC'
+    ORDER BY p.created_at DESC
+  </select>
+
+  <update id="updateVisibility">
+    UPDATE posts SET visibility = #{visibility}, updated_at = NOW() WHERE id = #{id}
+  </update>
+
+  <select id="countPosts" resultType="int">
+    SELECT COUNT(*) FROM posts
+  </select>
+
+  <select id="countHiddenPosts" resultType="int">
+    SELECT COUNT(*) FROM posts WHERE visibility = 'HIDDEN'
+  </select>
+</mapper>
