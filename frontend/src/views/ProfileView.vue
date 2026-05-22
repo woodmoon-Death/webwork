@@ -2,7 +2,7 @@
   <section class="profile-page">
     <div v-if="profile" class="panel profile-card profile-card-refined">
       <div class="profile-avatar profile-avatar-large">
-        <img v-if="profile.avatarUrl" :src="profile.avatarUrl" :alt="`${profile.nickname} 的头像`" />
+        <img v-if="profile.avatarUrl" :src="assetUrl(profile.avatarUrl)" :alt="`${profile.nickname} 的头像`" />
         <span v-else>{{ profile.nickname.slice(0, 1) }}</span>
       </div>
       <div class="profile-card-main">
@@ -91,6 +91,7 @@ import EmptyState from '../components/EmptyState.vue'
 import ImageUploader from '../components/ImageUploader.vue'
 import LoadingState from '../components/LoadingState.vue'
 import PostCard from '../components/PostCard.vue'
+import { assetUrl } from '../utils/assetUrl'
 
 const route = useRoute()
 const userStore = useUserStore()

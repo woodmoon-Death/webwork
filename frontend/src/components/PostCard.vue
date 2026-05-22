@@ -24,7 +24,7 @@
       @click="previewOpen = true"
       :aria-label="`查看《${post.title}》的大图`"
     >
-      <img class="post-image" :src="post.imageUrl" :alt="post.title" />
+      <img class="post-image" :src="assetUrl(post.imageUrl)" :alt="post.title" />
       <span class="post-image-hint">查看大图</span>
     </button>
 
@@ -40,7 +40,7 @@
     <teleport to="body">
       <div v-if="previewOpen" class="image-lightbox" @click.self="previewOpen = false">
         <button type="button" class="image-lightbox-close" @click="previewOpen = false">关闭</button>
-        <img class="image-lightbox-image" :src="post.imageUrl" :alt="post.title" />
+        <img class="image-lightbox-image" :src="assetUrl(post.imageUrl)" :alt="post.title" />
       </div>
     </teleport>
   </article>
@@ -51,6 +51,7 @@ import { computed, ref } from 'vue'
 import { useUserStore } from '../stores/userStore'
 import LikeButton from './LikeButton.vue'
 import UserBadge from './UserBadge.vue'
+import { assetUrl } from '../utils/assetUrl'
 
 const props = defineProps({
   post: { type: Object, required: true },

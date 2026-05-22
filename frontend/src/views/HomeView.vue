@@ -63,7 +63,7 @@
       <section class="feed-panel">
         <div class="composer-card" v-if="userStore.isLoggedIn">
           <div class="composer-avatar">
-            <img v-if="userStore.user.avatarUrl" :src="userStore.user.avatarUrl" :alt="`${userStore.user.nickname}的头像`" />
+            <img v-if="userStore.user.avatarUrl" :src="assetUrl(userStore.user.avatarUrl)" :alt="`${userStore.user.nickname}的头像`" />
             <span v-else>{{ userStore.user.nickname.slice(0, 1) }}</span>
           </div>
           <RouterLink to="/publish" class="composer-input">分享一段文字或图片...</RouterLink>
@@ -121,6 +121,7 @@ import EmptyState from '../components/EmptyState.vue'
 import LoadingState from '../components/LoadingState.vue'
 import PermissionNotice from '../components/PermissionNotice.vue'
 import PostCard from '../components/PostCard.vue'
+import { assetUrl } from '../utils/assetUrl'
 
 const postStore = usePostStore()
 const userStore = useUserStore()

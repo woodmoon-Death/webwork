@@ -19,7 +19,7 @@
         >
           <div class="message-thread-meta">
             <div class="composer-avatar">
-              <img v-if="thread.avatarUrl" :src="thread.avatarUrl" :alt="`${thread.nickname} 的头像`" />
+              <img v-if="thread.avatarUrl" :src="assetUrl(thread.avatarUrl)" :alt="`${thread.nickname} 的头像`" />
               <span v-else>{{ thread.nickname?.slice(0, 1) || 'U' }}</span>
             </div>
             <div class="message-thread-copy">
@@ -80,6 +80,7 @@ import EmptyState from '../components/EmptyState.vue'
 import LoadingState from '../components/LoadingState.vue'
 import { messageApi } from '../api/messageApi'
 import { useInboxStore } from '../stores/inboxStore'
+import { assetUrl } from '../utils/assetUrl'
 
 const route = useRoute()
 const router = useRouter()

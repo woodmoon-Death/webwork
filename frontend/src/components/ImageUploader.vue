@@ -8,7 +8,7 @@
     <p class="field-help">{{ helpText }}</p>
 
     <div v-if="displayPreview" class="uploader-preview-card">
-      <img :class="['image-preview', previewClass]" :src="displayPreview" :alt="previewAlt" />
+      <img :class="['image-preview', previewClass]" :src="assetUrl(displayPreview)" :alt="previewAlt" />
       <div class="uploader-actions">
         <button class="ghost-button" type="button" @click="triggerReplace">重新选择</button>
         <button class="ghost-button danger-text" type="button" @click="clearImage">移除图片</button>
@@ -22,6 +22,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { fileApi } from '../api/fileApi'
+import { assetUrl } from '../utils/assetUrl'
 
 const props = defineProps({
   label: { type: String, default: '分享图片' },

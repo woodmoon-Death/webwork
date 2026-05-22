@@ -14,6 +14,9 @@ public class AppConfig implements WebMvcConfigurer {
   @Value("${app.upload-dir:uploads}")
   private String uploadDir;
 
+  @Value("${app.cors-allowed-origins:http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173,http://127.0.0.1:4173}")
+  private String corsAllowedOrigins;
+
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
@@ -22,7 +25,7 @@ public class AppConfig implements WebMvcConfigurer {
   @Override
   public void addCorsMappings(CorsRegistry registry) {
     registry.addMapping("/api/**")
-        .allowedOrigins("http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:4173", "http://127.0.0.1:4173")
+        .allowedOrigins(corsAllowedOrigins.split("\\s*,\\s*"))
         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
         .allowedHeaders("*");
   }

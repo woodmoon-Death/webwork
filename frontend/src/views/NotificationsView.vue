@@ -14,7 +14,7 @@
       <div v-else-if="notifications.length" class="notification-list">
         <article v-for="item in notifications" :key="item.id" class="notification-item" :class="{ unread: !item.read }">
           <RouterLink class="user-badge" :to="`/users/${item.actorId}`">
-            <img v-if="item.actorAvatarUrl" :src="item.actorAvatarUrl" :alt="`${item.actorName} 的头像`" />
+            <img v-if="item.actorAvatarUrl" :src="assetUrl(item.actorAvatarUrl)" :alt="`${item.actorName} 的头像`" />
             <span v-else class="avatar-fallback">{{ item.actorName?.slice(0, 1) || 'U' }}</span>
             <span>{{ item.actorName }}</span>
           </RouterLink>
@@ -37,6 +37,7 @@ import { computed, onMounted, ref } from 'vue'
 import EmptyState from '../components/EmptyState.vue'
 import LoadingState from '../components/LoadingState.vue'
 import { useInboxStore } from '../stores/inboxStore'
+import { assetUrl } from '../utils/assetUrl'
 
 const inboxStore = useInboxStore()
 const loading = ref(false)
