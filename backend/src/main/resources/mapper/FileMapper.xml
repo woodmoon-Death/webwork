@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.social.mapper.FileMapper">
+  <resultMap id="FileRecordMap" type="com.example.social.entity.FileRecord">
+    <id property="id" column="id"/>
+    <result property="userId" column="user_id"/>
+    <result property="originalName" column="original_name"/>
+    <result property="storagePath" column="storage_path"/>
+    <result property="url" column="url"/>
+    <result property="contentType" column="content_type"/>
+    <result property="size" column="size"/>
+    <result property="createdAt" column="created_at"/>
+  </resultMap>
+
   <insert id="insert" useGeneratedKeys="true" keyProperty="id">
     INSERT INTO files (user_id, original_name, storage_path, url, content_type, size, created_at)
     VALUES (#{userId}, #{originalName}, #{storagePath}, #{url}, #{contentType}, #{size}, #{createdAt})
   </insert>
+
+  <select id="findById" resultMap="FileRecordMap">
+    SELECT * FROM files WHERE id = #{id}
+  </select>
+
+  <update id="updateUrl">
+    UPDATE files SET url = #{url} WHERE id = #{id}
+  </update>
 </mapper>

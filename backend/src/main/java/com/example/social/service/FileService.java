@@ -5,6 +5,9 @@ import com.example.social.entity.User;
 import com.example.social.exception.BusinessException;
 import com.example.social.mapper.FileMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -64,12 +66,41 @@ public class FileService {
     record.setUserId(user.getId());
     record.setOriginalName(file.getOriginalFilename());
     record.setStoragePath(target.toString());
-    record.setUrl("/uploads/" + filename);
     record.setContentType(file.getContentType());
     record.setSize(file.getSize());
     record.setCreatedAt(TimeUtil.nowBeijing());
     fileMapper.insert(record);
+    record.setUrl("/api/files/" + record.getId());
+    fileMapper.updateUrl(record.getId(), record.getUrl());
     return record;
+  }
+
+  public FileRecord findById(Long id) {
+    FileRecord record = fileMapper.findById(id);
+    if (record == null) {
+      throw new BusinessException(404, "图片不存在");
+    }
+    return record;
+  }
+
+  public Resource loadAsResource(FileRecord record) {
+    Path path = Paths.get(record.getStoragePath()).toAbsolutePath().normalize();
+    if (!path.startsWith(uploadDirectory)) {
+      throw new BusinessException(400, "文件路径不正确");
+    }
+    FileSystemResource resource = new FileSystemResource(path);
+    if (!resource.exists() || !resource.isReadable()) {
+      throw new BusinessException(404, "图片文件不存在");
+    }
+    return resource;
+  }
+
+  public MediaType mediaType(FileRecord record) {
+    try {
+      return MediaType.parseMediaType(record.getContentType());
+    } catch (Exception exception) {
+      return MediaType.APPLICATION_OCTET_STREAM;
+    }
   }
 
   private String extension(String originalName) {

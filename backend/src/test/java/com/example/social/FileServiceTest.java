@@ -29,8 +29,8 @@ class FileServiceTest {
     FileRecord record = service.upload(file, user);
 
     assertNotNull(record.getUrl());
-    assertTrue(record.getUrl().startsWith("/uploads/"));
-    assertTrue(Files.exists(tempDir.resolve(record.getUrl().replace("/uploads/", ""))));
+    assertTrue(record.getUrl().startsWith("/api/files/"));
+    assertTrue(Files.exists(Path.of(record.getStoragePath())));
     assertNotNull(mapper.saved);
   }
 
@@ -42,6 +42,11 @@ class FileServiceTest {
       fileRecord.setId(1L);
       saved = fileRecord;
       return 1;
+    }
+
+    @Override
+    public FileRecord findById(Long id) {
+      return saved;
     }
   }
 }
