@@ -32,7 +32,8 @@ public class AppConfig implements WebMvcConfigurer {
 
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    String normalizedUploadDir = java.nio.file.Paths.get(uploadDir).toAbsolutePath().normalize().toString();
     registry.addResourceHandler("/uploads/**")
-        .addResourceLocations("file:" + java.nio.file.Paths.get(uploadDir).toAbsolutePath().normalize() + "/");
+        .addResourceLocations("file:" + normalizedUploadDir + "/");
   }
 }

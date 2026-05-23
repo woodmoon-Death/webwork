@@ -13,6 +13,6 @@ export function assetUrl(url) {
   if (!url || /^(https?:|data:|blob:)/.test(url)) {
     return url
   }
-  const base = (configuredAssetBase || apiOrigin()).replace(/\/$/, '')
+  const base = (configuredAssetBase || apiOrigin() || '').replace(/\/$/, '')
   return base ? `${base}${url.startsWith('/') ? url : `/${url}`}` : url
 }

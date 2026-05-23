@@ -17,13 +17,13 @@ public class IpLocationService {
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   public String resolveClientIp(HttpServletRequest request) {
-    String forwarded = firstHeaderValue(request.getHeader("X-Forwarded-For"));
-    if (isPresent(forwarded)) {
-      return forwarded;
-    }
     String realIp = request.getHeader("X-Real-IP");
     if (isPresent(realIp)) {
       return realIp.trim();
+    }
+    String forwarded = firstHeaderValue(request.getHeader("X-Forwarded-For"));
+    if (isPresent(forwarded)) {
+      return forwarded;
     }
     return request.getRemoteAddr();
   }
@@ -69,14 +69,11 @@ public class IpLocationService {
       connection.setReadTimeout(3000);
       connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 
-      try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
-        StringBuilder body = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-          body.append(line);
-        }
-        return parseLocation(body.toString());
+      String location = parseLocation(readBody(connection));
+      if (isPresent(location)) {
+        return location;
       }
+      return "";
     } catch (Exception ignored) {
       return "";
     } finally {
@@ -108,6 +105,17 @@ public class IpLocationService {
       return addr;
     } catch (Exception ignored) {
       return "";
+    }
+  }
+
+  private String readBody(HttpURLConnection connection) throws Exception {
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "GB18030"))) {
+      StringBuilder body = new StringBuilder();
+      String line;
+      while ((line = reader.readLine()) != null) {
+        body.append(line);
+      }
+      return body.toString();
     }
   }
 
