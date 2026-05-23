@@ -33,7 +33,7 @@ public class FileService {
 
   public FileService(FileMapper fileMapper, @Value("${app.upload-dir:uploads}") String uploadDir) {
     this.fileMapper = fileMapper;
-    this.uploadDirectory = Paths.get(uploadDir).toAbsolutePath().normalize();
+    this.uploadDirectory = resolveUploadDirectory(uploadDir);
   }
 
   public FileRecord upload(MultipartFile file, User user) {
@@ -108,5 +108,34 @@ public class FileService {
       return ".jpg";
     }
     return originalName.substring(originalName.lastIndexOf(".")).toLowerCase();
+  }
+
+  private Path resolveUploadDirectory(String uploadDir) {
+    Path preferred = normalizeUploadDirectory(uploadDir);
+    if (isWritableDirectory(preferred)) {
+      return preferred;
+    }
+    Path fallback = Paths.get(System.getProperty("java.io.tmpdir"), "webwork-uploads").toAbsolutePath().normalize();
+    if (isWritableDirectory(fallback)) {
+      return fallback;
+    }
+    return preferred;
+  }
+
+  private Path normalizeUploadDirectory(String uploadDir) {
+    String candidate = uploadDir;
+    if (candidate == null || candidate.trim().isEmpty()) {
+      candidate = Paths.get(System.getProperty("java.io.tmpdir"), "webwork-uploads").toString();
+    }
+    return Paths.get(candidate).toAbsolutePath().normalize();
+  }
+
+  private boolean isWritableDirectory(Path directory) {
+    try {
+      Files.createDirectories(directory);
+      return Files.isDirectory(directory) && Files.isWritable(directory);
+    } catch (IOException exception) {
+      return false;
+    }
   }
 }
