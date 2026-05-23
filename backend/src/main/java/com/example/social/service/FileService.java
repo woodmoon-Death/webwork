@@ -66,6 +66,7 @@ public class FileService {
     record.setUserId(user.getId());
     record.setOriginalName(file.getOriginalFilename());
     record.setStoragePath(target.toString());
+    record.setUrl("/uploads/" + filename);
     record.setContentType(file.getContentType());
     record.setSize(file.getSize());
     record.setCreatedAt(TimeUtil.nowBeijing());
