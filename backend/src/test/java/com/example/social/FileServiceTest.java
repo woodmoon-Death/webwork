@@ -10,6 +10,7 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -30,7 +31,7 @@ class FileServiceTest {
 
     assertNotNull(record.getUrl());
     assertTrue(record.getUrl().startsWith("/api/files/"));
-    assertTrue(Files.exists(Path.of(record.getStoragePath())));
+    assertTrue(Files.exists(Paths.get(record.getStoragePath())));
     assertNotNull(mapper.saved);
   }
 

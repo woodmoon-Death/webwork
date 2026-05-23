@@ -58,8 +58,8 @@ public class FileService {
       try (InputStream inputStream = file.getInputStream()) {
         Files.copy(inputStream, target, StandardCopyOption.REPLACE_EXISTING);
       }
-    } catch (IOException exception) {
-      throw new BusinessException(500, "图片保存失败");
+    } catch (IOException | SecurityException exception) {
+      throw new BusinessException(500, "图片保存失败，请检查上传目录配置");
     }
 
     FileRecord record = new FileRecord();
