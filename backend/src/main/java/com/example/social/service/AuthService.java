@@ -9,6 +9,7 @@ import com.example.social.security.Role;
 import com.example.social.security.TokenService;
 import com.example.social.vo.AuthVo;
 import com.example.social.vo.UserVo;
+import com.example.social.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -45,8 +46,8 @@ public class AuthService {
     user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
     user.setRole(Role.USER.name());
     user.setStatus("ACTIVE");
-    user.setCreatedAt(LocalDateTime.now());
-    user.setUpdatedAt(LocalDateTime.now());
+    user.setCreatedAt(TimeUtil.nowBeijing());
+    user.setUpdatedAt(TimeUtil.nowBeijing());
     userMapper.insert(user);
     return UserVo.from(user);
   }

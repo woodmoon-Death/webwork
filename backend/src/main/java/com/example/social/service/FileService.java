@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import com.example.social.util.TimeUtil;
 
 @Service
 public class FileService {
@@ -66,7 +67,7 @@ public class FileService {
     record.setUrl("/uploads/" + filename);
     record.setContentType(file.getContentType());
     record.setSize(file.getSize());
-    record.setCreatedAt(LocalDateTime.now());
+    record.setCreatedAt(TimeUtil.nowBeijing());
     fileMapper.insert(record);
     return record;
   }

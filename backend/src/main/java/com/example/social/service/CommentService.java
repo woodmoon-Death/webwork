@@ -8,6 +8,7 @@ import com.example.social.mapper.CommentMapper;
 import com.example.social.mapper.PostMapper;
 import com.example.social.mapper.UserMapper;
 import com.example.social.vo.CommentVo;
+import com.example.social.util.TimeUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -40,8 +41,8 @@ public class CommentService {
     comment.setPostId(postId);
     comment.setUserId(user.getId());
     comment.setContent(request.getContent().trim());
-    comment.setCreatedAt(LocalDateTime.now());
-    comment.setUpdatedAt(LocalDateTime.now());
+    comment.setCreatedAt(TimeUtil.nowBeijing());
+    comment.setUpdatedAt(TimeUtil.nowBeijing());
     commentMapper.insert(comment);
     if (post != null) {
       notificationService.notifyComment(userMapper.findById(post.getUserId()), user, postId, comment.getId(), post.getTitle());

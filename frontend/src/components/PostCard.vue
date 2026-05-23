@@ -52,6 +52,7 @@ import { useUserStore } from '../stores/userStore'
 import LikeButton from './LikeButton.vue'
 import UserBadge from './UserBadge.vue'
 import { assetUrl } from '../utils/assetUrl'
+import { formatShanghaiDateTime } from '../utils/time'
 
 const props = defineProps({
   post: { type: Object, required: true },
@@ -66,7 +67,6 @@ const canDelete = computed(() => userStore.isAdmin || userStore.user?.id === pro
 const previewOpen = ref(false)
 
 function formatDate(value) {
-  if (!value) return ''
-  return new Date(value).toLocaleString('zh-CN', { hour12: false })
+  return formatShanghaiDateTime(value)
 }
 </script>

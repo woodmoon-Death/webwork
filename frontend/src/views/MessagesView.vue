@@ -81,6 +81,7 @@ import LoadingState from '../components/LoadingState.vue'
 import { messageApi } from '../api/messageApi'
 import { useInboxStore } from '../stores/inboxStore'
 import { assetUrl } from '../utils/assetUrl'
+import { formatShanghaiDateTime, formatShanghaiDate } from '../utils/time'
 
 const route = useRoute()
 const router = useRouter()
@@ -167,8 +168,6 @@ async function hideThread(userId) {
 }
 
 function formatDate(value, short = false) {
-  if (!value) return ''
-  const date = new Date(value)
-  return short ? date.toLocaleDateString('zh-CN') : date.toLocaleString('zh-CN', { hour12: false })
+  return short ? formatShanghaiDate(value) : formatShanghaiDateTime(value)
 }
 </script>

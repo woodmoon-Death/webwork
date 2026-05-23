@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -86,7 +87,7 @@ class LikeServiceTest {
       }
 
       @Override
-      public int updateVisibility(Long id, String visibility) {
+      public int updateVisibility(Long id, String visibility, LocalDateTime updatedAt) {
         return 0;
       }
 

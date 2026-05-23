@@ -38,6 +38,7 @@ import EmptyState from '../components/EmptyState.vue'
 import LoadingState from '../components/LoadingState.vue'
 import { useInboxStore } from '../stores/inboxStore'
 import { assetUrl } from '../utils/assetUrl'
+import { formatShanghaiDateTime } from '../utils/time'
 
 const inboxStore = useInboxStore()
 const loading = ref(false)
@@ -60,7 +61,6 @@ async function markAllRead() {
 }
 
 function formatDate(value) {
-  if (!value) return ''
-  return new Date(value).toLocaleString('zh-CN', { hour12: false })
+  return formatShanghaiDateTime(value)
 }
 </script>

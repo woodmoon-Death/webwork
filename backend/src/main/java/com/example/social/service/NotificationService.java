@@ -6,6 +6,7 @@ import com.example.social.mapper.DirectMessageMapper;
 import com.example.social.mapper.NotificationMapper;
 import com.example.social.vo.NotificationSummaryVo;
 import com.example.social.vo.NotificationVo;
+import com.example.social.util.TimeUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -77,7 +78,7 @@ public class NotificationService {
     notification.setMessageId(messageId);
     notification.setContent(content);
     notification.setIsRead(false);
-    notification.setCreatedAt(LocalDateTime.now());
+    notification.setCreatedAt(TimeUtil.nowBeijing());
     notificationMapper.insert(notification);
   }
 }

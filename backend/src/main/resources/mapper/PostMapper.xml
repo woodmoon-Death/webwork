@@ -108,7 +108,7 @@
   </select>
 
   <update id="updateVisibility">
-    UPDATE posts SET visibility = #{visibility}, updated_at = NOW() WHERE id = #{id}
+    UPDATE posts SET visibility = #{visibility}, updated_at = #{updatedAt} WHERE id = #{id}
   </update>
 
   <select id="countPosts" resultType="int">

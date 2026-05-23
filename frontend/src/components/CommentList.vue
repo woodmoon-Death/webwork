@@ -24,6 +24,7 @@ import CommentForm from './CommentForm.vue'
 import EmptyState from './EmptyState.vue'
 import PermissionNotice from './PermissionNotice.vue'
 import UserBadge from './UserBadge.vue'
+import { formatShanghaiDateTime } from '../utils/time'
 
 defineProps({
   comments: { type: Array, default: () => [] }
@@ -37,6 +38,6 @@ function canDelete(comment) {
 }
 
 function formatDate(value) {
-  return value ? new Date(value).toLocaleString('zh-CN', { hour12: false }) : ''
+  return formatShanghaiDateTime(value)
 }
 </script>

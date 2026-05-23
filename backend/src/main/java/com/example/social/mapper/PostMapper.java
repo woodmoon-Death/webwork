@@ -23,7 +23,7 @@ public interface PostMapper {
 
   List<PostVo> findByUserId(@Param("userId") Long userId, @Param("viewerId") Long viewerId);
 
-  int updateVisibility(@Param("id") Long id, @Param("visibility") String visibility);
+  int updateVisibility(@Param("id") Long id, @Param("visibility") String visibility, @Param("updatedAt") java.time.LocalDateTime updatedAt);
 
   int countPosts();
 

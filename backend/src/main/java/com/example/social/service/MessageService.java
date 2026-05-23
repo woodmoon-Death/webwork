@@ -10,6 +10,7 @@ import com.example.social.mapper.MessageThreadHideMapper;
 import com.example.social.mapper.UserMapper;
 import com.example.social.vo.DirectMessageVo;
 import com.example.social.vo.MessageThreadVo;
+import com.example.social.util.TimeUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -52,7 +53,7 @@ public class MessageService {
     message.setSenderId(sender.getId());
     message.setReceiverId(receiver.getId());
     message.setContent(request.getContent().trim());
-    message.setCreatedAt(LocalDateTime.now());
+    message.setCreatedAt(TimeUtil.nowBeijing());
     directMessageMapper.insert(message);
     messageThreadHideMapper.deleteByUserAndPartner(sender.getId(), receiver.getId());
     messageThreadHideMapper.deleteByUserAndPartner(receiver.getId(), sender.getId());

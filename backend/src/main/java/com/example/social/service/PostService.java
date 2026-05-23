@@ -6,6 +6,7 @@ import com.example.social.entity.User;
 import com.example.social.exception.BusinessException;
 import com.example.social.mapper.PostMapper;
 import com.example.social.security.Role;
+import com.example.social.util.TimeUtil;
 import com.example.social.vo.PostVo;
 import org.springframework.stereotype.Service;
 
@@ -56,8 +57,8 @@ public class PostService {
     post.setIpLocation(ipLocationService.displayLocation(clientIp));
     post.setIpAddress(ipLocationService.maskIp(clientIp));
     post.setVisibility("PUBLIC");
-    post.setCreatedAt(LocalDateTime.now());
-    post.setUpdatedAt(LocalDateTime.now());
+    post.setCreatedAt(TimeUtil.nowBeijing());
+    post.setUpdatedAt(TimeUtil.nowBeijing());
     postMapper.insert(post);
     return detail(post.getId(), user);
   }
@@ -69,7 +70,7 @@ public class PostService {
     post.setContent(request.getContent().trim());
     post.setImageUrl(request.getImageUrl());
     post.setTags(normalizeTags(request.getTags()));
-    post.setUpdatedAt(LocalDateTime.now());
+    post.setUpdatedAt(TimeUtil.nowBeijing());
     postMapper.update(post);
     return detail(id, user);
   }
@@ -87,7 +88,7 @@ public class PostService {
     if (!"PUBLIC".equals(visibility) && !"HIDDEN".equals(visibility)) {
       throw new BusinessException("可见状态不正确");
     }
-    postMapper.updateVisibility(id, visibility);
+    postMapper.updateVisibility(id, visibility, TimeUtil.nowBeijing());
     return detail(id, user);
   }
 

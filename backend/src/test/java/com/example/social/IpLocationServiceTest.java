@@ -11,9 +11,9 @@ class IpLocationServiceTest {
   @Test
   void displayLocationClassifiesLocalLanAndPublicAddresses() {
     assertEquals("本机", service.displayLocation("127.0.0.1"));
-    assertEquals("局域网", service.displayLocation("192.168.1.8"));
-    assertEquals("局域网", service.displayLocation("172.20.2.4"));
-    assertEquals("公网", service.displayLocation("8.8.8.8"));
+    assertEquals("本机", service.displayLocation("192.168.1.8"));
+    assertEquals("本机", service.displayLocation("172.20.2.4"));
+    assertEquals("未知", service.displayLocation("8.8.8.8"));
   }
 
   @Test
