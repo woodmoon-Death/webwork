@@ -48,5 +48,13 @@ class FileServiceTest {
     public FileRecord findById(Long id) {
       return saved;
     }
+
+    @Override
+    public int updateUrl(Long id, String url) {
+      if (saved != null && saved.getId().equals(id)) {
+        saved.setUrl(url);
+      }
+      return 1;
+    }
   }
 }
